@@ -1,0 +1,133 @@
+/* ================= FORM CONTAINER ================= */
+
+.content{
+  padding:32px;
+  max-width:640px;
+  margin:auto;
+
+}
+
+/* ================= INPUT FIELDS ================= */
+
+.input,
+.textarea,
+.file{
+  width:100%;
+  padding:14px 16px;
+  margin-bottom:16px;
+
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+
+  font-size:15px;
+
+  background:white;
+
+  transition:
+  border .2s,
+  box-shadow .2s,
+  transform .1s;
+}
+
+/* focus */
+
+.input:focus,
+.textarea:focus{
+
+  outline:none;
+
+  border-color:#2563eb;
+
+  box-shadow:
+  0 0 0 3px rgba(37,99,235,0.15),
+  0 6px 16px rgba(0,0,0,0.06);
+
+  transform:translateY(-1px);
+}
+
+/* textarea */
+
+.textarea{
+  min-height:120px;
+  resize:none;
+}
+
+/* ================= FILE UPLOAD ================= */
+
+.file{
+  background:#f9fafb;
+  cursor:pointer;
+  border:2px dashed #d1d5db;
+  text-align:center;
+  padding:18px;
+}
+
+.file:hover{
+  background:#f1f5f9;
+  border-color:#2563eb;
+}
+
+/* ================= BUTTON ================= */
+
+.btn{
+
+  width:100%;
+  padding:15px;
+
+  border:none;
+  border-radius:14px;
+
+  background:
+  linear-gradient(135deg,#2563eb,#1d4ed8);
+
+  color:white;
+
+  font-size:16px;
+  font-weight:600;
+
+  cursor:pointer;
+
+  transition:
+  transform .2s,
+  box-shadow .2s;
+}
+
+/* hover animation */
+
+.btn:hover{
+
+  transform:translateY(-2px);
+
+  box-shadow:
+  0 12px 24px rgba(0,0,0,0.18);
+
+}
+
+/* disabled */
+
+.btn:disabled{
+
+  background:#9ca3af;
+  cursor:not-allowed;
+  box-shadow:none;
+
+}
+
+/* ================= FORM TITLE ================= */
+
+.content h2{
+  font-size:22px;
+  font-weight:700;
+  margin-bottom:20px;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:600px){
+
+  .content{
+    padding:22px;
+    border-radius:14px;
+  }
+
+}
