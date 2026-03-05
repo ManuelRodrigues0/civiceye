@@ -68,20 +68,9 @@ body{
 
 /* BUTTONS */
 .card-buttons{
-  display:flex;
-  gap:8px;
-  margin-top:10px;
 }
 
 .card button{
-  flex:1;
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  background:#2563eb;
-  color:white;
-  font-weight:600;
-  cursor:pointer;
 }
 
 /* MAP BUTTON */
