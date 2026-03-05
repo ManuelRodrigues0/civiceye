@@ -77,15 +77,6 @@ body{
 
 /* ================= CARDS ================= */
 
-.card{
-  background:white;
-  border-radius:16px;
-  padding:14px;
-  margin-bottom:18px;
-  box-shadow:0 6px 18px rgba(0,0,0,0.08);
-  transition:all .25s ease;
-  width:100%;
-}
 
 .card:hover{
   transform:translateY(-4px);

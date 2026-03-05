@@ -7,7 +7,6 @@ import Report from "./pages/Report";
 import MapPage from "./pages/MapPage";
 import AITest from "./pages/AITest";
 import Resolve from "./pages/Resolve";
-import "./styles/layout.css";
 function App() {
 
 useEffect(() => {

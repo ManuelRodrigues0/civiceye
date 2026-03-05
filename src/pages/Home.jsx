@@ -77,7 +77,7 @@ export default function Home() {
         return (
           <div className="card" key={r.id}>
            <img
-  src={r.beforeImage || r.afterImage || ""}
+  src={r.beforeImage || r.afterImage || "/placeholder.jpg"}
   alt="report"
   loading="lazy"
 />
