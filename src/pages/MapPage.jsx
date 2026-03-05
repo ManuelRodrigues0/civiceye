@@ -5,6 +5,7 @@ import { db } from "../firebase";
 import { MapContainer, TileLayer, Marker, Popup, CircleMarker, useMap } from "react-leaflet";
 import L from "leaflet";
 import "../styles/map.css";
+import { useLocation } from "react-router-dom";
 
 // marker icons
 const redIcon = new L.Icon({
@@ -46,10 +47,26 @@ function LocateUser({ setUserLocation }) {
   return <button className="locate-btn" onClick={locate}>📍</button>;
 }
 
+function FlyToReport({ location }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (location) {
+      map.flyTo([location.lat, location.lng], 18, {
+        duration: 1.5
+      });
+    }
+  }, [location]);
+
+  return null;
+}
+
 export default function MapPage() {
   const [satellite, setSatellite] = useState(false);
   const [reports, setReports] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
+  const location = useLocation();
+const reportLocation = location.state;
 
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "reports"), (snapshot) => {
@@ -91,8 +108,16 @@ export default function MapPage() {
           {satellite ? "🗺 Map" : "🛰 Satellite"}
         </button>
       </div>
-
+      
+       <FlyToReport location={reportLocation} />
+       
         <LocateUser setUserLocation={setUserLocation} />
+
+{reportLocation && (
+  <Marker position={[reportLocation.lat, reportLocation.lng]}>
+    <Popup>Selected Report</Popup>
+  </Marker>
+)}
 
         {userLocation && (
           <CircleMarker

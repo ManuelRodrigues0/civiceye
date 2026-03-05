@@ -3,9 +3,13 @@ import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 import { db } from "../firebase";
 import { Link } from "react-router-dom"; // ✅ added
 import "../styles/home.css";
+import { getAQI } from "../utils/getAQI";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [reports, setReports] = useState([]);
+  const [aqiData, setAqiData] = useState({});
+  const navigate = useNavigate();
 
   useEffect(() => {
     // latest reports first
@@ -13,6 +17,7 @@ export default function Home() {
       collection(db, "reports"),
       orderBy("createdAt", "desc")
     );
+   
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const list = snapshot.docs.map((doc) => ({
@@ -25,6 +30,34 @@ export default function Home() {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+
+  if (reports.length === 0) return;
+
+  const loadAQI = async () => {
+
+    const newAqi = {};
+
+    for (const report of reports) {
+
+      if (report.lat && report.lng) {
+
+        const aqi = await getAQI(report.lat, report.lng);
+
+        newAqi[report.id] = aqi;
+
+      }
+
+    }
+
+    setAqiData(newAqi);
+
+  };
+
+  loadAQI();
+
+}, [reports]);
+
   return (
     <div className="content">
       <h2>Recent Reports</h2>
@@ -32,6 +65,8 @@ export default function Home() {
       {reports.length === 0 && <p>No reports yet</p>}
 
       {reports.map((r) => {
+
+        const aqiValue = aqiData[r.id]?.aqi;
         // 🔥 handle both number timestamp & firestore timestamp
         let time = "";
         if (r.createdAt) {
@@ -55,6 +90,20 @@ export default function Home() {
               </div>
             )}
 
+<p
+  className="aqi"
+  style={{
+    color:
+      aqiValue <= 50
+        ? "green"
+        : aqiValue <= 100
+        ? "orange"
+        : "red",
+  }}
+>
+AQI: {aqiValue ?? "Loading..."}
+</p>
+
             {/* ✅ RESOLVE BUTTON */}
             {r.status !== "resolved" && (
               <Link to={`/resolve/${r.id}`}>
@@ -63,6 +112,18 @@ export default function Home() {
                 </button>
               </Link>
             )}
+            <button
+  onClick={() =>
+    navigate("/map", {
+      state: {
+        lat: r.lat,
+        lng: r.lng
+      }
+    })
+  }
+>
+  View on Map
+</button>
           </div>
         );
       })}
