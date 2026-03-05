@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { analyzeImage } from "../ai/cleanDetector";
 import { getClipEmbedding } from "../ai/clipService";
 import "../styles/report.css";
+
 function detectCategory(type, description) {
   const text = (type + " " + description).toLowerCase();
 
@@ -326,6 +327,13 @@ function Report() {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+  if (toast) {
+    setTimeout(() => setToast(null), 3000);
+  }
+}, [toast]);
 
   // Upload image to Cloudinary
   const uploadImage = async (file) => {
@@ -406,7 +414,7 @@ beforeDirty: aiResult.dirty,
   createdAt: Date.now(),
 });
 
-      alert("Report submitted 🚀");
+     setToast("Report submitted 🚀");
 
       setType("");
       setDescription("");
@@ -448,7 +456,13 @@ beforeDirty: aiResult.dirty,
       <button className="btn" onClick={submitReport} disabled={loading}>
         {loading ? "Uploading..." : "Submit Report"}
       </button>
+      {toast && (
+  <div className="toast-card">
+    {toast}
+  </div>
+)}
     </div>
+    
   );
 }
 

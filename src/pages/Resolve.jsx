@@ -35,6 +35,13 @@ export default function Resolve() {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
+  const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+  if (toast) {
+    setTimeout(() => setToast(null), 3000);
+  }
+}, [toast]);
 
   // load report
   useEffect(() => {
@@ -291,7 +298,7 @@ embeddings.push(
  
   // MAIN VERIFY FUNCTION
   const handleUpload = async () => {
-    if (!file || !report) return alert("Upload image first");
+    if (!file || !report) return setToast({message:"Upload image first",type:"error"});
 
     setLoading(true);
 
@@ -312,7 +319,7 @@ embeddings.push(
     console.log("Distance from original:", distance);
 
     if (distance > 30) {
-      alert("❌ You are too far from original location");
+      setToast({ message:"❌ You are too far from original location", type:"error"});
       setLoading(false);
       return;
     }
@@ -352,7 +359,7 @@ for (const beforeEmb of embeddings) {
 console.log("Best similarity:", bestSimilarity);
 
 if (bestSimilarity < 0.70) {
-  alert("❌ Different location detected — fake cleanup");
+  setToast({message:"❌ Different location detected — fake cleanup" ,type:"error"});
   setLoading(false);
   return;
 }
@@ -376,7 +383,7 @@ else if (ai.moderate > ai.dirty) {
 
 // Still dirty
 else {
-  alert("❌ Area still dirty");
+  setToast({message:"❌ Area still dirty",type:"error"});
   setLoading(false);
   return;
 }
@@ -394,13 +401,13 @@ else {
         });
 
         setResult(finalStatus);
-        alert("✅ Verification complete");
+        setToast({message:"✅ Verification complete",type:"success"});
         setLoading(false);
       };
 
     } catch (err) {
       console.error(err);
-      alert("AI failed to analyze image");
+      setToast({message:"AI failed to analyze image",type:"error"});
       setLoading(false);
     }
   };
@@ -408,24 +415,31 @@ else {
   if (!report) return <h2>Loading...</h2>;
 
   return (
-    <div style={{ padding: 20 }}>
+    <div className="resolve-container">
       <h2>Verify Cleanup</h2>
 
-      <p>Status: {report.status}</p>
+      <p className="status">Status: {report.status}</p>
 
       <h3>Before Photo</h3>
-      <img src={report.beforeImage} width="300" />
+      <img src={report.beforeImage} />
 
       <hr />
 
       <h3>Upload After Photo</h3>
+      <div className="upload-section">
       <input type="file" onChange={e => setFile(e.target.files[0])} />
 
-      <button onClick={handleUpload} disabled={loading}>
+      <button className="verify-btn" onClick={handleUpload} disabled={loading}>
         {loading ? "Checking..." : "Verify Cleanup"}
       </button>
+      {toast && (
+  <div className={`toast-card ${toast.type}`}>
+    {toast.message}
+  </div>
+)}
+      </div>
 
-      {result && <h2>AI Result: {result}</h2>}
+      {result && <div className="result">AI Result: {result}</div>}
     </div>
   );
 }

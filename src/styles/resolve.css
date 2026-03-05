@@ -1,33 +1,35 @@
-/* ================= CONTAINER ================= */
+/* ================= PAGE WRAPPER ================= */
 
 .resolve-container{
-  max-width:720px;
+  max-width:900px;
   margin:40px auto;
-  padding:28px;
+  padding:32px;
 
   background:white;
-  border-radius:20px;
+  border-radius:18px;
 
-  box-shadow:0 12px 28px rgba(0,0,0,0.08);
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
 
   display:flex;
   flex-direction:column;
-  gap:16px;
+  gap:24px;
 }
 
-/* ================= TITLE ================= */
+/* ================= HEADER ================= */
 
 .resolve-container h2{
-  text-align:center;
-  font-size:22px;
+  font-size:24px;
   font-weight:700;
+  text-align:center;
+  color:#1f2937;
 }
 
 /* ================= STATUS ================= */
 
 .status{
   text-align:center;
-  font-size:14px;
+  font-size:22px;
+  font-weight:500;
   color:#6b7280;
 }
 
@@ -35,47 +37,57 @@
 
 .resolve-container img{
   width:100%;
-  max-height:320px;
+  max-height:420px;
   object-fit:cover;
 
   border-radius:14px;
 
-  box-shadow:0 6px 16px rgba(0,0,0,0.1);
+  box-shadow:0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* ================= LABEL ================= */
+
+.resolve-container label{
+  font-weight:600;
+  font-size:14px;
+  color:#374151;
 }
 
 /* ================= UPLOAD SECTION ================= */
 
 .upload-section{
   display:flex;
-  gap:12px;
   align-items:center;
-  justify-content:space-between;
+  gap:16px;
   margin-top:10px;
 }
 
-/* file input */
+/* ================= FILE INPUT ================= */
 
 .upload-section input[type="file"]{
   flex:1;
 
-  padding:10px;
+  padding:12px;
+
   border-radius:10px;
   border:1px solid #d1d5db;
 
   background:#f9fafb;
+
+  font-size:14px;
 }
 
-/* ================= BUTTON ================= */
+/* ================= VERIFY BUTTON ================= */
 
 .verify-btn{
-  padding:12px 18px;
+  padding:12px 22px;
 
   border:none;
-  border-radius:12px;
+  border-radius:10px;
 
-  background:linear-gradient(135deg,#16a34a,#15803d);
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+
   color:white;
-
   font-weight:600;
   font-size:14px;
 
@@ -86,7 +98,7 @@
 
 .verify-btn:hover{
   transform:translateY(-2px);
-  box-shadow:0 8px 16px rgba(0,0,0,0.15);
+  box-shadow:0 8px 18px rgba(0,0,0,0.15);
 }
 
 /* ================= RESULT ================= */
@@ -94,18 +106,28 @@
 .result{
   text-align:center;
   font-size:18px;
-  font-weight:600;
+  font-weight:700;
+
   color:#16a34a;
-  margin-top:10px;
+
+  padding:12px;
+  border-radius:10px;
+
+  background:#ecfdf5;
 }
 
 /* ================= MOBILE ================= */
 
-@media(max-width:600px){
+@media(max-width:700px){
+
+  .resolve-container{
+    margin:20px;
+    padding:20px;
+  }
 
   .upload-section{
     flex-direction:column;
-    gap:10px;
+    align-items:stretch;
   }
 
   .verify-btn{
@@ -114,7 +136,7 @@
 
 }
 
-/* ================= MOBILE NAV ================= */
+/* ================= BOTTOM NAV ================= */
 
 .bottomnav{
   position:fixed;
@@ -124,10 +146,13 @@
   height:65px;
   background:white;
   border-top:1px solid #e5e7eb;
+
   display:flex;
   justify-content:space-around;
   align-items:center;
+
   z-index:50;
+
   box-shadow:0 -4px 10px rgba(0,0,0,0.05);
 }
 
@@ -135,11 +160,45 @@
   display:flex;
   flex-direction:column;
   align-items:center;
+
   text-decoration:none;
   color:#6b7280;
+
   font-size:22px;
 }
 
 .bottomnav a.active{
   color:#2563eb;
 }
+.toast-card{
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #2ecc71;
+  color: white;
+  padding: 14px 20px;
+  border-radius: 10px;
+  font-weight: 500;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  animation: slideIn 0.3s ease;
+  z-index: 9999;
+}
+
+@keyframes slideIn{
+  from{
+    transform: translateX(100%);
+    opacity:0;
+  }
+  to{
+    transform: translateX(0);
+    opacity:1;
+  }
+}
+.toast-card.error{
+  background: #ff2b06;
+}
+.toast-card.success{
+  background: #2ee046;
+}
+
+

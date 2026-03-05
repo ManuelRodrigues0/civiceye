@@ -1,13 +1,13 @@
 import { Link, Outlet } from "react-router-dom";
 import "../styles/layout.css";
-
+import logo from "../assets/logo.png";
 export default function Layout() {
   return (
     <div className="app">
 
       {/* TOP BAR */}
       <header className="topbar">
-        <div className="logo">CivicEye</div>
+        <div className="logo"><img src={logo} className="logo-img"/><span className="logo-text">CivicEye</span></div>
 
         <nav className="navlinks">
           <Link to="/">Home</Link>

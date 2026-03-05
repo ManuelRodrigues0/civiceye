@@ -229,3 +229,23 @@ textarea{
   }
 
 }
+
+.logo-section{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo-img{
+  width:30px;
+  height:30px;
+  object-fit:contain;
+  display: inline;
+  margin-right: 3px;
+}
+
+.logo-text{
+  font-size:20px;
+  font-weight:600;
+  color:white;
+}
