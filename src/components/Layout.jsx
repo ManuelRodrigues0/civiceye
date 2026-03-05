@@ -20,7 +20,7 @@ export default function Layout() {
         </nav>
 
         {/* Mobile help icon */}
-  <Link to="/how" className="mobile-help">❓</Link>
+  <Link to="/how" className="mobile-help">?</Link>
 
       </header>
 
