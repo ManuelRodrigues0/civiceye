@@ -77,8 +77,9 @@ export default function Home() {
         return (
           <div className="card" key={r.id}>
            <img
-  src={r.beforeImage || r.image || "/placeholder.jpg"}
+  src={r.beforeImage || r.afterImage || ""}
   alt="report"
+  loading="lazy"
 />
 
             <div className="type">{r.type}</div>
@@ -97,14 +98,16 @@ export default function Home() {
   className="aqi"
   style={{
     color:
-      aqiValue <= 50
+      !aqiValue
+        ? "#6b7280"
+        : aqiValue <= 50
         ? "green"
         : aqiValue <= 100
         ? "orange"
         : "red",
   }}
 >
-AQI: {aqiValue ?? "Loading..."}
+AQI: {aqiValue ? aqiValue : "Loading..."}
 </p>
 
             {/* ✅ RESOLVE BUTTON */}
