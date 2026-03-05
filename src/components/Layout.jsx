@@ -6,7 +6,11 @@ export default function Layout() {
 
       {/* TOP BAR */}
       <header className="topbar">
-        <div className="logo"><img src={logo} className="logo-img"/><span className="logo-text">CivicEye</span></div>
+         <div className="logo">
+    <img src="/logo.png" className="logo-img" />
+    <span className="logo-text">CivicEye</span>
+  </div>
+
 
         <nav className="navlinks">
           <Link to="/">Home</Link>
