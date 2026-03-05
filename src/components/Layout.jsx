@@ -1,6 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
 import "../styles/layout.css";
-import logo from "/logo.png";
 export default function Layout() {
   return (
     <div className="app">
