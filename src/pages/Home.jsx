@@ -76,7 +76,10 @@ export default function Home() {
         }
         return (
           <div className="card" key={r.id}>
-            {r.beforeImage && <img src={r.beforeImage} alt="report" />}
+           <img
+  src={r.beforeImage || r.image || "/placeholder.jpg"}
+  alt="report"
+/>
 
             <div className="type">{r.type}</div>
             <div className="desc">{r.description}</div>
