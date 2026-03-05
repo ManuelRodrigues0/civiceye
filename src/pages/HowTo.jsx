@@ -1,19 +1,88 @@
+import "../styles/howto.css";
+
 export default function HowTo() {
   return (
-    <div style={{padding:"40px", maxWidth:"800px", margin:"auto"}}>
-      <h1>How CivicEye Works</h1>
+    <div className="howto-container">
 
-      <h3>1. Report a Problem</h3>
-      <p>Click the camera button and upload a photo of garbage or civic issue.</p>
+      <h1 className="howto-title">How CivicEye Works</h1>
+      <p className="howto-sub">
+        Report civic issues and verify cleanup using AI and location matching.
+      </p>
 
-      <h3>2. Location is Verified</h3>
-      <p>The app saves the GPS location of the problem.</p>
+      <div className="timeline">
 
-      <h3>3. Cleanup Verification</h3>
-      <p>After cleaning, upload another photo from the same place.</p>
+        <div className="timeline-step">
+          <div className="step-number">1</div>
+          <div className="step-card">
+            <div className="step-title">Report a Problem</div>
+            <div className="step-desc">
+              Take or upload a photo of garbage or a civic issue from the location.
+              The system stores the image as the original report.
+            </div>
+          </div>
+        </div>
 
-      <h3>4. AI Confirms Cleanup</h3>
-      <p>The system checks if the area is actually cleaned using AI.</p>
+        <div className="timeline-step">
+          <div className="step-number">2</div>
+          <div className="step-card">
+            <div className="step-title">Location is Saved</div>
+            <div className="step-desc">
+              CivicEye records the GPS coordinates of the report to prevent
+              fake cleanup verification from other locations.
+            </div>
+          </div>
+        </div>
+
+        <div className="timeline-step">
+          <div className="step-number">3</div>
+          <div className="step-card">
+            <div className="step-title">Issue Appears on Map</div>
+            <div className="step-desc">
+              The reported issue becomes visible on the map so others can
+              see and track the cleanup progress.
+            </div>
+          </div>
+        </div>
+
+        <div className="timeline-step">
+          <div className="step-number">4</div>
+          <div className="step-card">
+            <div className="step-title">Cleanup Happens</div>
+            <div className="step-desc">
+              Authorities or volunteers clean the reported area.
+            </div>
+          </div>
+        </div>
+
+        <div className="timeline-step">
+          <div className="step-number">5</div>
+          <div className="step-card">
+            <div className="step-title">Upload Cleanup Photo</div>
+            <div className="step-desc">
+              Click the report and upload a new photo from the same position
+              and angle as the original image.
+            </div>
+          </div>
+        </div>
+
+        <div className="timeline-step">
+          <div className="step-number">6</div>
+          <div className="step-card">
+            <div className="step-title">AI Verification</div>
+            <div className="step-desc">
+              CivicEye compares the before and after photos using AI.
+              If similarity and cleanliness match, the issue is marked resolved.
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div className="howto-note">
+        Tip: For best verification, take the cleanup photo from the same spot
+        and camera angle as the original report.
+      </div>
+
     </div>
   );
 }
