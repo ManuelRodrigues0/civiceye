@@ -1,215 +1,97 @@
-/* ================= RESET ================= */
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
-}
-
+/* PAGE */
 body{
   background:#eef3f7;
-  color:#111;
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
 }
 
-/* ================= APP WRAPPER ================= */
-
-.app{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  background:#f5f7fa;
-  width:100%;
-}
-
-/* ================= TOP BAR ================= */
-
-.topbar{
-  position:sticky;
-  top:0;
-  background:linear-gradient(135deg,#0ea5e9,#2563eb);
-  color:white;
-  padding:14px 18px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:600;
-  z-index:20;
-  box-shadow:0 3px 10px rgba(0,0,0,0.08);
-}
-
-.logo{
-  font-size:20px;
-}
-
-/* ================= CONTENT ================= */
-
+/* CONTAINER */
 .content{
-  flex:1;
-  width:100%;
-  padding:18px;
-  padding-bottom:90px;
-  max-width:900px;
+  max-width:480px;
   margin:auto;
+  padding:16px;
 }
 
-/* PAGE LAYOUT */
+/* TITLE */
+.content h2{
+  font-size:20px;
+  margin-bottom:14px;
+  font-weight:700;
+}
+
+/* REPORT LIST */
 .reports-grid{
   display:flex;
   flex-direction:column;
-  gap:16px;
-  width:100%;
-  max-width:800px;
-  margin:auto;
-  padding:16px;
+  gap:14px;
 }
 
 /* CARD */
 .card{
   background:white;
   border-radius:16px;
-  padding:14px;
-  margin-bottom:18px;
-  box-shadow:0 6px 18px rgba(0,0,0,0.08);
-  transition:all .25s ease;
-  width:100%;
-}
-
-/* CARD HOVER EFFECT */
-.card:hover{
-  transform:translateY(-3px);
-  box-shadow:0 8px 18px rgba(0,0,0,0.12);
+  overflow:hidden;
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
 }
 
 /* IMAGE */
 .card img{
   width:100%;
-  height:130px;
+  height:160px;
   object-fit:cover;
-  border-radius:10px;
-  margin-bottom:8px;
 }
 
-/* ISSUE TYPE */
+/* CARD BODY */
+.card-content{
+  padding:12px;
+}
+
+/* TYPE */
 .type{
-  font-weight:600;
+  font-weight:700;
   font-size:16px;
-  color:#111827;
+  margin-bottom:4px;
 }
 
 /* DESCRIPTION */
 .desc{
-  margin-top:4px;
-  color:#6b7280;
-  font-size:13px;
+  color:#555;
+  font-size:14px;
+  margin-bottom:6px;
 }
 
 /* DATE */
-.date{
-  font-size:11px;
-  color:#9ca3af;
-  margin-top:4px;
-}
-
-/* STATUS */
-.status{
-  margin-top:4px;
+.meta{
   font-size:12px;
-  font-weight:500;
-  color:#10b981;
+  color:#888;
 }
 
 /* AQI */
 .aqi{
-  margin-top:4px;
+  margin-top:6px;
   font-weight:600;
-  color:#ef4444;
-  font-size:13px;
 }
 
-/* BUTTON CONTAINER */
+/* BUTTONS */
 .card-buttons{
   display:flex;
   gap:8px;
   margin-top:10px;
 }
 
-/* BUTTON */
 .card button{
-  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  flex:1;
+  padding:10px;
   border:none;
+  border-radius:8px;
+  background:#2563eb;
   color:white;
-  padding:7px 12px;
-  border-radius:7px;
+  font-weight:600;
   cursor:pointer;
-  font-size:13px;
-  font-weight:500;
-  transition:all 0.2s ease;
 }
 
-/* BUTTON HOVER */
-.card button:hover{
-  transform:scale(1.04);
-  background:linear-gradient(135deg,#1d4ed8,#1e40af);
-}
-
-/* MOBILE RESPONSIVE */
-@media (max-width:600px){
-
-  .reports-grid{
-    padding:10px;
-  }
-
-  .card img{
-    height:110px;
-  }
-
-  .card{
-    padding:10px;
-  }
-
-  .card button{
-    font-size:12px;
-    padding:6px 10px;
-  }
-
-}
-.reports-grid{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
+/* MAP BUTTON */
+.map-btn{
   width:100%;
-  max-width:700px;
-  margin:auto;
-  padding:14px;
-}
-
-/* ================= MOBILE NAV ================= */
-
-.bottomnav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  height:65px;
-  background:white;
-  border-top:1px solid #e5e7eb;
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  z-index:50;
-  box-shadow:0 -4px 10px rgba(0,0,0,0.05);
-}
-
-.bottomnav a{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  text-decoration:none;
-  color:#6b7280;
-  font-size:22px;
-}
-
-.bottomnav a.active{
-  color:#2563eb;
+  margin-top:8px;
+  background:#1d4ed8;
 }
