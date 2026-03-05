@@ -249,3 +249,28 @@ textarea{
   font-weight:600;
   color:white;
 }
+
+/* help icon (mobile only) */
+
+.mobile-help{
+  position:absolute;
+  right:16px;
+  font-size:22px;
+  text-decoration:none;
+  color:white;
+  display:none;
+}
+
+/* MOBILE */
+
+@media (max-width:768px){
+
+  .navlinks{
+    display:none;
+  }
+
+  .mobile-help{
+    display:block;
+  }
+
+}

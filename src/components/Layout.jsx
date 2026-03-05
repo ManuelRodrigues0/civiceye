@@ -16,7 +16,12 @@ export default function Layout() {
           <Link to="/">Home</Link>
           <Link to="/report">Report</Link>
           <Link to="/map">Map</Link>
+          <Link to="/how">How To</Link>
         </nav>
+
+        {/* Mobile help icon */}
+  <Link to="/how" className="mobile-help">❓</Link>
+
       </header>
 
       {/* PAGE CONTENT */}

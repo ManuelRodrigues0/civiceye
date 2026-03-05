@@ -7,6 +7,7 @@ import Report from "./pages/Report";
 import MapPage from "./pages/MapPage";
 import AITest from "./pages/AITest";
 import Resolve from "./pages/Resolve";
+import HowTo from "./pages/HowTo";
 function App() {
 
 useEffect(() => {
@@ -24,6 +25,7 @@ useEffect(() => {
           <Route path="/map" element={<MapPage />} />
           <Route path="/ai-test" element={<AITest />} />
           <Route path="/resolve/:id" element={<Resolve />} />
+          <Route path="/how" element={<HowTo />} />
         </Route>
 
       </Routes>
