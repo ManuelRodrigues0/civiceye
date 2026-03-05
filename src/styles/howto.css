@@ -106,3 +106,58 @@
   text-align:center;
   font-weight:500;
 }
+
+/* ================= MOBILE FIX ================= */
+
+@media (max-width:700px){
+
+  .howto-container{
+    margin:20px 14px;
+    padding:10px;
+  }
+
+  .howto-title{
+    font-size:24px;
+  }
+
+  .howto-sub{
+    font-size:14px;
+    padding:0 6px;
+  }
+
+  .timeline{
+    margin-left:0;
+  }
+
+  /* move the line slightly left */
+  .timeline::before{
+    left:12px;
+  }
+
+  .timeline-step{
+    margin-bottom:24px;
+  }
+
+  .step-number{
+    width:28px;
+    height:28px;
+    font-size:14px;
+    margin-right:12px;
+  }
+
+  .step-card{
+    padding:16px;
+    border-radius:12px;
+    width:100%;
+  }
+
+  .step-title{
+    font-size:17px;
+  }
+
+  .step-desc{
+    font-size:14px;
+    line-height:1.5;
+  }
+
+}
