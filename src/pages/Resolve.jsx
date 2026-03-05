@@ -92,209 +92,96 @@ export default function Resolve() {
 
   const embeddings = [];
 
-  embeddings.push(await getClipEmbedding(file));
+// FULL SCENE (reference)
+embeddings.push(await getClipEmbedding(file));
 
-  const center = await createCrop(
-    img.width*0.2,
-    img.height*0.2,
-    img.width*0.6,
-    img.height*0.6
-  );
-  embeddings.push(await getClipEmbedding(new File([center],"center.jpg")));
 
-  const zoom = await createCrop(
-    img.width*0.1,
-    img.height*0.1,
-    img.width*0.8,
-    img.height*0.8
-  );
-  embeddings.push(await getClipEmbedding(new File([zoom],"zoom.jpg")));
+// BOTTOM GROUND / WATER AREA
+const ground = await createCrop(
+  0,
+  img.height * 0.6,
+  img.width,
+  img.height * 0.4
+);
+embeddings.push(
+  await getClipEmbedding(new File([ground], "ground.jpg"))
+);
 
-  const top = await createCrop(
-    0,
-    0,
-    img.width,
-    img.height*0.5
-  );
-  embeddings.push(await getClipEmbedding(new File([top],"top.jpg")));
 
-  const bottom = await createCrop(
-    0,
-    img.height*0.5,
-    img.width,
-    img.height*0.5
-  );
-  embeddings.push(await getClipEmbedding(new File([bottom],"bottom.jpg")));
+// WATER + EDGE BOUNDARY
+const waterEdge = await createCrop(
+  img.width * 0.1,
+  img.height * 0.45,
+  img.width * 0.8,
+  img.height * 0.35
+);
+embeddings.push(
+  await getClipEmbedding(new File([waterEdge], "waterEdge.jpg"))
+);
 
-  const left = await createCrop(
-    0,
-    0,
-    img.width*0.5,
-    img.height
-  );
-  embeddings.push(await getClipEmbedding(new File([left],"left.jpg")));
 
-  const right = await createCrop(
-    img.width*0.5,
-    0,
-    img.width*0.5,
-    img.height
-  );
-  embeddings.push(await getClipEmbedding(new File([right],"right.jpg")));
+// CHANNEL STRUCTURE (drain / pipe alignment)
+const channel = await createCrop(
+  img.width * 0.3,
+  img.height * 0.25,
+  img.width * 0.4,
+  img.height * 0.6
+);
+embeddings.push(
+  await getClipEmbedding(new File([channel], "channel.jpg"))
+);
 
-  // HORIZON / BACKGROUND
+
+// LEFT STRUCTURE (walls / banks / buildings)
+// SKYLINE / FAR STRUCTURE
+const skyline = await createCrop(
+  0,
+  0,
+  img.width,
+  img.height * 0.2
+);
+embeddings.push(
+  await getClipEmbedding(new File([skyline],"skyline.jpg"))
+);
+
+
+// LEFT BACKGROUND STRUCTURE
+const leftBackground = await createCrop(
+  0,
+  img.height * 0.1,
+  img.width * 0.35,
+  img.height * 0.5
+);
+embeddings.push(
+  await getClipEmbedding(new File([leftBackground],"leftBg.jpg"))
+);
+
+
+// RIGHT BACKGROUND STRUCTURE
+const rightBackground = await createCrop(
+  img.width * 0.65,
+  img.height * 0.1,
+  img.width * 0.35,
+  img.height * 0.5
+);
+embeddings.push(
+  await getClipEmbedding(new File([rightBackground],"rightBg.jpg"))
+);
+
+
+// HORIZON LINE
 const horizon = await createCrop(
   0,
   img.height * 0.25,
   img.width,
-  img.height * 0.35
+  img.height * 0.15
 );
-embeddings.push(await getClipEmbedding(new File([horizon],"horizon.jpg")));
-
-
-// FAR BACKGROUND
-const far = await createCrop(
-  img.width * 0.15,
-  img.height * 0.1,
-  img.width * 0.7,
-  img.height * 0.3
-);
-embeddings.push(await getClipEmbedding(new File([far],"far.jpg")));
-
-
-// MIDDLE STRIP
-const middle = await createCrop(
-  0,
-  img.height * 0.35,
-  img.width,
-  img.height * 0.25
-);
-embeddings.push(await getClipEmbedding(new File([middle],"middle.jpg")));
-
-
-// NARROW CENTER
-const narrow = await createCrop(
-  img.width * 0.3,
-  img.height * 0.2,
-  img.width * 0.4,
-  img.height * 0.5
-);
-embeddings.push(await getClipEmbedding(new File([narrow],"narrow.jpg")));
-
-
-// TOP THIRD
-const topThird = await createCrop(
-  0,
-  0,
-  img.width,
-  img.height * 0.33
-);
-embeddings.push(await getClipEmbedding(new File([topThird],"topThird.jpg")));
-
-// ===== LIGHTING ROBUST EMBEDDINGS =====
-
-// GRAYSCALE (removes color differences between day/sunset/night)
-const canvasGray = document.createElement("canvas");
-const ctxGray = canvasGray.getContext("2d");
-
-canvasGray.width = img.width;
-canvasGray.height = img.height;
-
-ctxGray.drawImage(img,0,0);
-
-const imgData = ctxGray.getImageData(0,0,canvasGray.width,canvasGray.height);
-const data = imgData.data;
-
-for (let i=0;i<data.length;i+=4){
-  const gray = data[i]*0.3 + data[i+1]*0.59 + data[i+2]*0.11;
-  data[i]=gray;
-  data[i+1]=gray;
-  data[i+2]=gray;
-}
-
-ctxGray.putImageData(imgData,0,0);
-
-const grayBlob = await new Promise(res=>canvasGray.toBlob(res,"image/jpeg"));
-
 embeddings.push(
-  await getClipEmbedding(new File([grayBlob],"gray.jpg"))
+  await getClipEmbedding(new File([horizon],"horizon.jpg"))
 );
+return embeddings;
 
-
-// HIGH CONTRAST (helps with shadows and night images)
-const contrastCanvas = document.createElement("canvas");
-const contrastCtx = contrastCanvas.getContext("2d");
-
-contrastCanvas.width = img.width;
-contrastCanvas.height = img.height;
-
-contrastCtx.filter = "contrast(180%)";
-contrastCtx.drawImage(img,0,0);
-
-const contrastBlob =
-  await new Promise(res=>contrastCanvas.toBlob(res,"image/jpeg"));
-
-embeddings.push(
-  await getClipEmbedding(new File([contrastBlob],"contrast.jpg"))
-);
-
-
-// BRIGHTNESS NORMALIZED (helps when night image is darker)
-const brightCanvas = document.createElement("canvas");
-const brightCtx = brightCanvas.getContext("2d");
-
-brightCanvas.width = img.width;
-brightCanvas.height = img.height;
-
-brightCtx.filter = "brightness(130%)";
-brightCtx.drawImage(img,0,0);
-
-const brightBlob =
-  await new Promise(res=>brightCanvas.toBlob(res,"image/jpeg"));
-
-embeddings.push(
-  await getClipEmbedding(new File([brightBlob],"bright.jpg"))
-);
-
-
-// EDGE STYLE (very strong for structures like fences, poles, buildings)
-const edgeCanvas = document.createElement("canvas");
-const edgeCtx = edgeCanvas.getContext("2d");
-
-edgeCanvas.width = img.width;
-edgeCanvas.height = img.height;
-
-edgeCtx.filter = "grayscale(100%) contrast(200%)";
-edgeCtx.drawImage(img,0,0);
-
-const edgeBlob =
-  await new Promise(res=>edgeCanvas.toBlob(res,"image/jpeg"));
-
-embeddings.push(
-  await getClipEmbedding(new File([edgeBlob],"edge.jpg"))
-);
-
-
-// HORIZONTAL FLIP (handles camera direction differences)
-const flipCanvas = document.createElement("canvas");
-const flipCtx = flipCanvas.getContext("2d");
-
-flipCanvas.width = img.width;
-flipCanvas.height = img.height;
-
-flipCtx.translate(img.width,0);
-flipCtx.scale(-1,1);
-flipCtx.drawImage(img,0,0);
-
-const flipBlob =
-  await new Promise(res=>flipCanvas.toBlob(res,"image/jpeg"));
-
-embeddings.push(
-  await getClipEmbedding(new File([flipBlob],"flip.jpg"))
-);
-
-  return embeddings;
-}
+  }
  
   // MAIN VERIFY FUNCTION
   const handleUpload = async () => {
@@ -358,7 +245,7 @@ for (const beforeEmb of embeddings) {
 }
 console.log("Best similarity:", bestSimilarity);
 
-if (bestSimilarity < 0.70) {
+if (bestSimilarity < 0.85) {
   setToast({message:"❌ Different location detected — fake cleanup" ,type:"error"});
   setLoading(false);
   return;
@@ -394,6 +281,7 @@ else {
         // update firestore
         await updateDoc(doc(db, "reports", id), {
           afterImage: afterImageUrl,
+            beforeImage: afterImageUrl,
           afterLabel: ai.label,
           afterConfidence: ai.confidence,
           status: finalStatus,
