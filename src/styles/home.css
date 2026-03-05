@@ -1,15 +1,10 @@
 /* PAGE */
 body{
   background:#eef3f7;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
 }
 
-/* CONTENT AREA */
-.content{
-  max-width:480px;
-  margin:auto;
-  padding:16px;
-}
+
 
 /* TITLE */
 .content h2{
@@ -22,87 +17,76 @@ body{
 .reports-grid{
   display:flex;
   flex-direction:column;
-  gap:16px;
+  gap:14px;
 }
 
-/* REPORT CARD */
+/* CARD */
 .card{
   background:white;
-  border-radius:14px;
+  border-radius:16px;
   overflow:hidden;
   box-shadow:0 4px 12px rgba(0,0,0,0.08);
-  padding:0;
 }
 
 /* IMAGE */
 .card img{
   width:100%;
-  height:170px;
+  height:160px;
   object-fit:cover;
 }
 
-/* TEXT AREA */
-.card .type,
-.card .desc,
-.card .meta,
-.card .status,
-.card .aqi{
-  padding-left:12px;
-  padding-right:12px;
+/* CARD BODY */
+.card-content{
+  padding:12px;
 }
 
-/* ISSUE TITLE */
+/* TYPE */
 .type{
-  font-size:16px;
   font-weight:700;
-  margin-top:10px;
+  font-size:16px;
+  margin-bottom:4px;
 }
 
 /* DESCRIPTION */
 .desc{
-  font-size:14px;
   color:#555;
-  margin-top:4px;
+  font-size:14px;
+  margin-bottom:6px;
 }
 
 /* DATE */
 .meta{
   font-size:12px;
-  color:#777;
-  margin-top:4px;
-}
-
-/* STATUS */
-.status{
-  font-size:13px;
-  margin-top:4px;
+  color:#888;
 }
 
 /* AQI */
 .aqi{
-  font-weight:600;
   margin-top:6px;
+  font-weight:600;
 }
 
 /* BUTTONS */
+.card-buttons{
+  display:flex;
+  gap:8px;
+  margin-top:10px;
+}
+
 .card button{
-  margin:10px 12px;
+  flex:1;
   padding:10px;
   border:none;
   border-radius:8px;
   background:#2563eb;
   color:white;
   font-weight:600;
-  width:calc(100% - 24px);
   cursor:pointer;
 }
 
-/* SECOND BUTTON */
-.card button + button{
-  margin-top:6px;
-}
-
-/* HOVER */
-.card button:hover{
+/* MAP BUTTON */
+.map-btn{
+  width:100%;
+  margin-top:8px;
   background:#1d4ed8;
 }

@@ -1,0 +1,213 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Mobile app feel */
+body {
+  @apply bg-emerald-50 text-gray-800;
+}
+/* RESET */
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
+font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+}
+
+body{
+background:#eef3f7;
+color:#111;
+}
+
+/* PHONE CONTAINER */
+/* MOBILE DEFAULT */
+.app{
+  width:100%;
+  min-height:100vh;
+  background:#f5f7fa;
+  display:flex;
+  flex-direction:column;
+}
+
+/* DESKTOP MODE */
+@media (min-width:768px){
+  .app{
+    max-width:none;
+    margin:0;
+    flex-direction:row;
+  }
+}
+/* HEADER */
+.header{
+background:linear-gradient(135deg,#0ea5e9,#0284c7);
+color:white;
+padding:16px;
+font-size:20px;
+font-weight:600;
+position:sticky;
+top:0;
+z-index:10;
+box-shadow:0 2px 10px rgba(0,0,0,0.15);
+}
+
+
+/* REPORT CARD */
+.card{
+background:white;
+border-radius:14px;
+padding:12px;
+margin-bottom:14px;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+height: 10%;
+}
+
+.card img{
+width:100%;
+height:180px;
+object-fit:cover;
+border-radius:10px;
+margin-bottom:8px;
+}
+
+.type{
+font-weight:700;
+font-size:17px;
+margin-bottom:4px;
+}
+
+.desc{
+color:#444;
+margin-bottom:6px;
+}
+
+.meta{
+font-size:12px;
+color:#666;
+margin-top:4px;
+}
+
+/* FORM */
+.input, textarea{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:1px solid #d0d7de;
+margin-bottom:12px;
+font-size:15px;
+background:white;
+}
+
+textarea{
+min-height:90px;
+resize:none;
+}
+
+.file{
+margin-bottom:14px;
+}
+
+/* BUTTON */
+.btn{
+width:100%;
+padding:14px;
+border:none;
+border-radius:12px;
+background:#0ea5e9;
+color:white;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+}
+
+.btn:disabled{
+background:#9ca3af;
+}
+
+/* BOTTOM NAV */
+.nav{
+display:flex;
+background:white;
+border-top:1px solid #ddd;
+}
+
+.nav button{
+flex:1;
+padding:14px;
+border:none;
+background:white;
+font-size:15px;
+}
+
+.nav button.active{
+color:#0ea5e9;
+font-weight:700;
+}
+/* make site look like app */
+.app {
+  padding-bottom: 70px;
+}
+
+/* bottom navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 65px;
+  background: white;
+  border-top: 1px solid #ddd;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 999;
+}
+
+/* each tab */
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #777;
+  font-size: 22px;
+}
+
+.tab span {
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+/* active tab */
+.tab.active {
+  color: #2563eb;
+  font-weight: bold;
+}
+.map-toggle{
+  position:absolute;
+  top:12px;
+  right:12px;
+  z-index:1000;
+}
+
+.map-toggle button{
+  background:white;
+  border:none;
+  padding:10px 14px;
+  border-radius:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);
+  font-weight:600;
+  cursor:pointer;
+}
+.locate-btn{
+  position:absolute;
+  bottom:90px;
+  right:14px;
+  z-index:1000;
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  border:none;
+  background:white;
+  font-size:22px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.25);
+}
