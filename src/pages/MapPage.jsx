@@ -22,6 +22,8 @@ const yellowIcon = new L.Icon({
   iconAnchor: [12, 41],
 });
 
+
+
 // choose icon using saved category
 function getIcon(category) {
   if (category === "road") return yellowIcon;
@@ -66,7 +68,11 @@ export default function MapPage() {
   const [reports, setReports] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const location = useLocation();
+  const [showToilets, setShowToilets] = useState(false);
+const [toilets, setToilets] = useState([]);
+const [toiletTrigger, setToiletTrigger] = useState(0);
 const reportLocation = location.state;
+
 
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "reports"), (snapshot) => {
@@ -80,6 +86,66 @@ const reportLocation = location.state;
     return () => unsub();
   }, []);
 
+function FetchToilets({ setToilets, trigger }) {
+
+  const map = useMap();
+
+  useEffect(() => {
+
+    const fetchToilets = async () => {
+
+      const bounds = map.getBounds();
+
+      const south = bounds.getSouth();
+      const west = bounds.getWest();
+      const north = bounds.getNorth();
+      const east = bounds.getEast();
+
+      const query = `
+      [out:json][timeout:25];
+      nwr["amenity"="toilets"](${south},${west},${north},${east});
+      out center;
+      `;
+
+      const res = await fetch(
+        "https://overpass-api.de/api/interpreter",
+        {
+          method: "POST",
+          body: query,
+          headers: { "Content-Type": "text/plain" }
+        }
+      );
+
+      const data = await res.json();
+
+      const toiletPoints = data.elements.map(el => {
+
+        const lat = el.lat || el.center?.lat;
+        const lng = el.lon || el.center?.lon;
+
+        const tags = el.tags || {};
+
+        return {
+          lat,
+          lng,
+          access: tags.access || "Unknown",
+          fee: tags.fee === "yes" ? "Paid" : "Free",
+          operator: tags.operator || "Unknown",
+          ownership: tags.ownership || "Unknown"
+        };
+
+      });
+
+      setToilets(toiletPoints);
+
+    };
+
+    fetchToilets();
+
+  }, [trigger]); // important
+
+  return null;
+}
   return (
     <div className="content">
       <h2>City Problem Map</h2>
@@ -109,6 +175,8 @@ const reportLocation = location.state;
         </button>
       </div>
       
+      
+
        <FlyToReport location={reportLocation} />
        
         <LocateUser setUserLocation={setUserLocation} />
@@ -131,6 +199,35 @@ const reportLocation = location.state;
           />
         )}
 
+{showToilets && (
+  <FetchToilets
+    setToilets={setToilets}
+    trigger={toiletTrigger}
+  />
+)}
+        {showToilets &&
+  toilets.map((t, i) => (
+    <Marker key={"toilet"+i} position={[t.lat, t.lng]}>
+      <Popup>
+  <b>🚻 Public Toilet</b>
+  <br/>
+
+  Access: {t.access}
+  <br/>
+
+  Fee: {t.fee}
+  <br/>
+
+  Operator: {t.operator}
+  <br/>
+
+  Ownership: {t.ownership}
+
+</Popup>
+    </Marker>
+  ))
+}
+
         {reports.map((r) =>
           r.lat && r.lng ? (
             <Marker key={r.id} position={[r.lat, r.lng]} icon={getIcon(r.category)}>
@@ -150,7 +247,29 @@ const reportLocation = location.state;
             </Marker>
           ) : null
         )}
+
+        <button
+  className="toilet-btn"
+  onClick={() => {
+
+    if (!showToilets) {
+
+      setShowToilets(true);
+      setToiletTrigger(prev => prev + 1);
+
+    } else {
+
+      setShowToilets(false);
+      setToilets([]);
+
+    }
+
+  }}
+>
+  🚻 Toilets
+</button>
       </MapContainer>
+      
 
       
     </div>
