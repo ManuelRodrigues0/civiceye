@@ -181,6 +181,7 @@ body{
 
   .dash-card h3{
     font-size:14px;
+    min-height: 48px;
   }
 
   .dash-card p{
