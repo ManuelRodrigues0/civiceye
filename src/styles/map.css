@@ -160,3 +160,6 @@
     height: calc(100vh - 140px) !important;
   }
 }
+.content {
+  padding-bottom: 80px;
+}
