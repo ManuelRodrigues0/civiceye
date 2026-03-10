@@ -316,7 +316,9 @@ else {
       <h3>Upload After Photo</h3>
       <div className="upload-section">
       <input type="file"
-      accept="image/*" onChange={e => setFile(e.target.files[0])} />
+      accept="image/*"
+      capture="environment"
+      onChange={e => setFile(e.target.files[0])} />
 
       <button className="verify-btn" onClick={handleUpload} disabled={loading}>
         {loading ? "Checking..." : "Verify Cleanup"}
