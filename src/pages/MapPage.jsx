@@ -6,6 +6,7 @@ import { MapContainer, TileLayer, Marker, Popup, CircleMarker, useMap } from "re
 import L from "leaflet";
 import "../styles/map.css";
 import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 // marker icons
 const redIcon = new L.Icon({
@@ -90,6 +91,7 @@ export default function MapPage() {
 const [toilets, setToilets] = useState([]);
 const [toiletTrigger, setToiletTrigger] = useState(0);
 const reportLocation = location.state;
+const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -267,10 +269,16 @@ function FetchToilets({ setToilets, trigger }) {
   <br/>
   <b>Status:</b> {r.status}
   <br/>
-  <img
-    src={r.beforeImage || r.imageUrl}
-    style={{ width:"160px", marginTop:"6px", borderRadius:"8px" }}
-  />
+ <img
+  src={r.beforeImage || r.imageUrl}
+  style={{
+    width:"160px",
+    marginTop:"6px",
+    borderRadius:"8px",
+    cursor:"pointer"
+  }}
+  onClick={() => navigate(`/resolve/${r.id}`)}
+/>
 </Popup>
             </Marker>
           ) : null

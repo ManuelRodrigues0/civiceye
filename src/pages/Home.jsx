@@ -10,6 +10,9 @@ export default function Home() {
   const [reports, setReports] = useState([]);
   const [aqiData, setAqiData] = useState({});
   const navigate = useNavigate();
+  const [userLocation, setUserLocation] = useState(null);
+const [nearbyReports, setNearbyReports] = useState(0);
+const [resolvedCount, setResolvedCount] = useState(0);
 
   useEffect(() => {
     // latest reports first
@@ -58,8 +61,75 @@ export default function Home() {
 
 }, [reports]);
 
+useEffect(() => {
+  navigator.geolocation.getCurrentPosition((pos) => {
+    setUserLocation({
+      lat: pos.coords.latitude,
+      lng: pos.coords.longitude
+    });
+  });
+}, []);
+
+useEffect(() => {
+
+  if (!userLocation || reports.length === 0) return;
+
+  let nearby = 0;
+  let resolved = 0;
+
+  reports.forEach((r) => {
+
+    if (r.status === "resolved") {
+      resolved++;
+    }
+
+    if (r.lat && r.lng) {
+
+      const dist =
+        Math.sqrt(
+          (r.lat - userLocation.lat) ** 2 +
+          (r.lng - userLocation.lng) ** 2
+        );
+
+      if (dist < 0.02) {
+        nearby++;
+      }
+
+    }
+
+  });
+
+  setNearbyReports(nearby);
+  setResolvedCount(resolved);
+
+}, [reports, userLocation]);
+
   return (
-    <div className="content">
+  <div className="content">
+
+    <div className="dashboard">
+
+      <div className="dash-card">
+        <h3>Local AQI</h3>
+        <p>
+          {reports.length > 0
+            ? aqiData[reports[0].id]?.aqi || "Loading..."
+            : "--"}
+        </p>
+      </div>
+
+      <div className="dash-card">
+        <h3>Reports Near You</h3>
+        <p>{nearbyReports}</p>
+      </div>
+
+      <div className="dash-card">
+        <h3>Resolved Issues</h3>
+        <p>{resolvedCount}</p>
+      </div>
+
+    </div>
+
       <h2>Recent Reports</h2>
   <div className="reports-grid">
       {reports.length === 0 && <p>No reports yet</p>}

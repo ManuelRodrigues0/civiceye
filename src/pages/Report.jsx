@@ -63,88 +63,98 @@ const getLocation = () =>
 
   }
 
-  // FULL SCENE (reference)
-  const ground = await createCrop(
-    0,
-    img.height * 0.6,
-    img.width,
-    img.height * 0.4
-  );
+  const embeddings = [];
 
-  // WATER + EDGE BOUNDARY
-  const waterEdge = await createCrop(
-    img.width * 0.1,
-    img.height * 0.45,
-    img.width * 0.8,
-    img.height * 0.35
-  );
+// FULL SCENE (reference)
+embeddings.push(await getClipEmbedding(file));
 
-  // CHANNEL STRUCTURE (drain / pipe alignment)
-  const channel = await createCrop(
-    img.width * 0.3,
-    img.height * 0.25,
-    img.width * 0.4,
-    img.height * 0.6
-  );
 
-  // SKYLINE / FAR STRUCTURE
-  const skyline = await createCrop(
-    0,
-    0,
-    img.width,
-    img.height * 0.2
-  );
+// BOTTOM GROUND / WATER AREA
+const ground = await createCrop(
+  0,
+  img.height * 0.6,
+  img.width,
+  img.height * 0.4
+);
+embeddings.push(
+  await getClipEmbedding(new File([ground], "ground.jpg"))
+);
 
-  // LEFT BACKGROUND STRUCTURE
-  const leftBackground = await createCrop(
-    0,
-    img.height * 0.1,
-    img.width * 0.35,
-    img.height * 0.5
-  );
 
-  // RIGHT BACKGROUND STRUCTURE
-  const rightBackground = await createCrop(
-    img.width * 0.65,
-    img.height * 0.1,
-    img.width * 0.35,
-    img.height * 0.5
-  );
+// WATER + EDGE BOUNDARY
+const waterEdge = await createCrop(
+  img.width * 0.1,
+  img.height * 0.45,
+  img.width * 0.8,
+  img.height * 0.35
+);
+embeddings.push(
+  await getClipEmbedding(new File([waterEdge], "waterEdge.jpg"))
+);
 
-  // HORIZON LINE
-  const horizon = await createCrop(
-    0,
-    img.height * 0.25,
-    img.width,
-    img.height * 0.15
-  );
 
-  // 🚀 Run embeddings in parallel
-  const promises = [
+// CHANNEL STRUCTURE (drain / pipe alignment)
+const channel = await createCrop(
+  img.width * 0.3,
+  img.height * 0.25,
+  img.width * 0.4,
+  img.height * 0.6
+);
+embeddings.push(
+  await getClipEmbedding(new File([channel], "channel.jpg"))
+);
 
-    getClipEmbedding(file),
 
-    getClipEmbedding(new File([ground], "ground.jpg")),
+// LEFT STRUCTURE (walls / banks / buildings)
+// SKYLINE / FAR STRUCTURE
+const skyline = await createCrop(
+  0,
+  0,
+  img.width,
+  img.height * 0.2
+);
+embeddings.push(
+  await getClipEmbedding(new File([skyline],"skyline.jpg"))
+);
 
-    getClipEmbedding(new File([waterEdge], "waterEdge.jpg")),
 
-    getClipEmbedding(new File([channel], "channel.jpg")),
+// LEFT BACKGROUND STRUCTURE
+const leftBackground = await createCrop(
+  0,
+  img.height * 0.1,
+  img.width * 0.35,
+  img.height * 0.5
+);
+embeddings.push(
+  await getClipEmbedding(new File([leftBackground],"leftBg.jpg"))
+);
 
-    getClipEmbedding(new File([skyline],"skyline.jpg")),
 
-    getClipEmbedding(new File([leftBackground],"leftBg.jpg")),
+// RIGHT BACKGROUND STRUCTURE
+const rightBackground = await createCrop(
+  img.width * 0.65,
+  img.height * 0.1,
+  img.width * 0.35,
+  img.height * 0.5
+);
+embeddings.push(
+  await getClipEmbedding(new File([rightBackground],"rightBg.jpg"))
+);
 
-    getClipEmbedding(new File([rightBackground],"rightBg.jpg")),
 
-    getClipEmbedding(new File([horizon],"horizon.jpg"))
+// HORIZON LINE
+const horizon = await createCrop(
+  0,
+  img.height * 0.25,
+  img.width,
+  img.height * 0.15
+);
+embeddings.push(
+  await getClipEmbedding(new File([horizon],"horizon.jpg"))
+);
+return embeddings;
 
-  ];
-
-  const embeddings = await Promise.all(promises);
-
-  return embeddings;
-
-}
+  }
 
 async function verifyImage(file, reportLat, reportLng) {
   try {
