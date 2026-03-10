@@ -8,15 +8,7 @@ import "../styles/resolve.css";
 // 🔒 Get current GPS location
 const getLocation = () =>
   new Promise((resolve, reject) =>
-    navigator.geolocation.getCurrentPosition(
-      resolve,
-      reject,
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 0
-      }
-    )
+    navigator.geolocation.getCurrentPosition(resolve, reject)
   );
 
 // 📏 Calculate distance between two GPS points
