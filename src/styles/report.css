@@ -51,53 +51,55 @@ margin: 8px;
 
 /* ================= FILE UPLOAD ================= */
 
-.file{
-  background:#f9fafb;
-  cursor:pointer;
-  border:2px dashed #d1d5db;
-  text-align:center;
-  padding:18px;
-}
-
-.file:hover{
-  background:#f1f5f9;
-  border-color:#2563eb;
-}
-
-/* ================= BUTTON ================= */
-
-.btn{
-
+.newupload{
   width:100%;
-  padding:15px;
+  padding:18px;
+  text-align:center;
+
+  border-radius:10px;
+  font-weight:600;
+  font-size:15px;
+
+  background:#f9fafb;
+  color:#6b7280;
+
+  border:2px dashed #d1d5db;
+
+  cursor:pointer;
+
+  transition:.25s;
+   display:block;
+  margin-bottom:16px;
+}
+
+.newupload:hover{
+  border-color:#3b82f6;
+  color:#2563eb;
+  background:#eff6ff;
+}
+
+/* Verify button */
+.btn{
+  width:100%;
+  padding:14px;
 
   border:none;
-  border-radius:14px;
+  border-radius:10px;
 
-  background:
-  linear-gradient(135deg,#2563eb,#1d4ed8);
-
-  color:white;
-
-  font-size:16px;
   font-weight:600;
+  font-size:15px;
+
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:white;
 
   cursor:pointer;
 
-  transition:
-  transform .2s,
-  box-shadow .2s;
+  transition:.25s;
 }
 
-/* hover animation */
-
 .btn:hover{
-
   transform:translateY(-2px);
-
-  box-shadow:
-  0 12px 24px rgba(0,0,0,0.18);
-
+  box-shadow:0 6px 14px rgba(0,0,0,0.15);
 }
 
 /* disabled */

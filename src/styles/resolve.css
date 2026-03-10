@@ -55,50 +55,67 @@
 
 /* ================= UPLOAD SECTION ================= */
 
+/* Upload button */
 .upload-section{
   display:flex;
-  align-items:center;
-  gap:16px;
-  margin-top:10px;
+  flex-direction:column;
+  gap:14px;
 }
 
-/* ================= FILE INPUT ================= */
-
+/* Hide default input */
 .upload-section input[type="file"]{
-  flex:1;
+  display:none;
+}
 
-  padding:12px;
+/* Upload Image button */
+.upload-btn{
+  width:100%;
+  padding:18px;
+
+  text-align:center;
 
   border-radius:10px;
-  border:1px solid #d1d5db;
+  font-weight:600;
+  font-size:15px;
 
   background:#f9fafb;
+  color:#6b7280;
 
-  font-size:14px;
+  border:2px dashed #d1d5db;
+
+  cursor:pointer;
+
+  transition:.25s;
 }
 
-/* ================= VERIFY BUTTON ================= */
+.upload-btn:hover{
+  border-color:#3b82f6;
+  color:#2563eb;
+  background:#eff6ff;
+}
 
+/* Verify button */
 .verify-btn{
-  padding:12px 22px;
+  width:100%;
+  padding:14px;
 
   border:none;
   border-radius:10px;
 
-  background:linear-gradient(135deg,#22c55e,#16a34a);
-
-  color:white;
   font-weight:600;
-  font-size:14px;
+  font-size:15px;
+
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:white;
 
   cursor:pointer;
 
-  transition:all .2s ease;
+  transition:.25s;
 }
 
 .verify-btn:hover{
   transform:translateY(-2px);
-  box-shadow:0 8px 18px rgba(0,0,0,0.15);
+  box-shadow:0 6px 14px rgba(0,0,0,0.15);
 }
 
 /* ================= RESULT ================= */
