@@ -36,12 +36,22 @@ function detectCategory(type, description) {
   return "other";
 }
 
+import exifr from "exifr";
+
 const getLocation = () =>
   new Promise((resolve, reject) =>
-    navigator.geolocation.getCurrentPosition(resolve, reject)
+    navigator.geolocation.getCurrentPosition(
+      resolve,
+      reject,
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    )
   );
 
-  import exifr from "exifr";
+ 
 
   async function generateSceneEmbeddings(file) {
 
