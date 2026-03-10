@@ -155,11 +155,8 @@
 .toilet-btn:hover{
   background:#f3f4f6;
 }
-@media (max-width: 768px) {
-  .leaflet-container {
-    height: calc(100vh - 140px) !important;
-  }
-}
+
+
 .content {
   padding-bottom: 80px;
 }

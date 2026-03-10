@@ -172,7 +172,10 @@ function FetchToilets({ setToilets, trigger }) {
         center={[19.0760, 72.8777]}
         zoom={12}
         maxZoom={22}
-        style={{ height: "70vh", borderRadius: "14px" }}
+        style={{
+  height: window.innerWidth < 768 ? "60vh" : "70vh",
+  borderRadius: "14px"
+}}
       >
         {satellite ? (
           <TileLayer
