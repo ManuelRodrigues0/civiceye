@@ -55,67 +55,50 @@
 
 /* ================= UPLOAD SECTION ================= */
 
-/* Upload button */
 .upload-section{
   display:flex;
-  flex-direction:column;
-  gap:14px;
+  align-items:center;
+  gap:16px;
+  margin-top:10px;
 }
 
-/* Hide default input */
+/* ================= FILE INPUT ================= */
+
 .upload-section input[type="file"]{
-  display:none;
-}
+  flex:1;
 
-/* Upload Image button */
-.upload-btn{
-  width:100%;
-  padding:18px;
-
-  text-align:center;
+  padding:12px;
 
   border-radius:10px;
-  font-weight:600;
-  font-size:15px;
+  border:1px solid #d1d5db;
 
   background:#f9fafb;
-  color:#6b7280;
 
-  border:2px dashed #d1d5db;
-
-  cursor:pointer;
-
-  transition:.25s;
+  font-size:14px;
 }
 
-.upload-btn:hover{
-  border-color:#3b82f6;
-  color:#2563eb;
-  background:#eff6ff;
-}
+/* ================= VERIFY BUTTON ================= */
 
-/* Verify button */
 .verify-btn{
-  width:100%;
-  padding:14px;
+  padding:12px 22px;
 
   border:none;
   border-radius:10px;
 
-  font-weight:600;
-  font-size:15px;
-
   background:linear-gradient(135deg,#22c55e,#16a34a);
+
   color:white;
+  font-weight:600;
+  font-size:14px;
 
   cursor:pointer;
 
-  transition:.25s;
+  transition:all .2s ease;
 }
 
 .verify-btn:hover{
   transform:translateY(-2px);
-  box-shadow:0 6px 14px rgba(0,0,0,0.15);
+  box-shadow:0 8px 18px rgba(0,0,0,0.15);
 }
 
 /* ================= RESULT ================= */

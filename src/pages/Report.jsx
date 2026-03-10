@@ -326,18 +326,12 @@ beforeDirty: aiResult.dirty,
       />
 
       <input
-  type="file"
-  id="newupload"
-  accept="image/*"
-  style={{ display: "none" }}
-  onChange={e => setFile(e.target.files[0])}
-/>
-
-<label htmlFor="newupload" className="newupload">
-  Upload Image
-</label>
-
-
+        className="file"
+        type="file"
+        accept="image/*"
+        capture="environment"
+        onChange={(e) => setImage(e.target.files[0])}
+      />
 
       <button className="btn" onClick={submitReport} disabled={loading}>
         {loading ? "Uploading..." : "Submit Report"}

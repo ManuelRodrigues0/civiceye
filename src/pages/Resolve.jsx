@@ -315,17 +315,7 @@ else {
 
       <h3>Upload After Photo</h3>
       <div className="upload-section">
-      <input
-  type="file"
-  id="uploadImage"
-  accept="image/*"
-  style={{ display: "none" }}
-  onChange={e => setFile(e.target.files[0])}
-/>
-
-<label htmlFor="uploadImage" className="upload-btn">
-  Upload Image
-</label>
+      <input type="file" onChange={e => setFile(e.target.files[0])} />
 
       <button className="verify-btn" onClick={handleUpload} disabled={loading}>
         {loading ? "Checking..." : "Verify Cleanup"}
