@@ -27,6 +27,12 @@ const greenIcon = new L.Icon({
   iconSize: [25, 41],
   iconAnchor: [12, 41],
 });
+const blueIcon = new L.Icon({
+  iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
 
 
 // choose icon using saved category
@@ -219,7 +225,11 @@ function FetchToilets({ setToilets, trigger }) {
 )}
         {showToilets &&
   toilets.map((t, i) => (
-    <Marker key={"toilet"+i} position={[t.lat, t.lng]}>
+   <Marker
+  key={"toilet"+i}
+  position={[t.lat, t.lng]}
+  icon={blueIcon}
+>
       <Popup>
   <b>🚻 Public Toilet</b>
   <br/>
