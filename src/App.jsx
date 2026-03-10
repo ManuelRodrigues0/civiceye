@@ -8,6 +8,7 @@ import MapPage from "./pages/MapPage";
 import AITest from "./pages/AITest";
 import Resolve from "./pages/Resolve";
 import HowTo from "./pages/HowTo";
+import AdminReview from "./pages/AdminReview";
 function App() {
 
 useEffect(() => {
@@ -26,6 +27,7 @@ useEffect(() => {
           <Route path="/ai-test" element={<AITest />} />
           <Route path="/resolve/:id" element={<Resolve />} />
           <Route path="/how" element={<HowTo />} />
+          <Route path="/admin-bhumi" element={<AdminReview />} />
         </Route>
 
       </Routes>

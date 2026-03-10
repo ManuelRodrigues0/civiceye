@@ -21,12 +21,24 @@ const yellowIcon = new L.Icon({
   iconSize: [25, 41],
   iconAnchor: [12, 41],
 });
-
+const greenIcon = new L.Icon({
+  iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+});
 
 
 // choose icon using saved category
-function getIcon(category) {
+function getIcon(category, status) {
+
+  // resolved → green
+  if (status === "resolved") return greenIcon;
+
+  // road issue → yellow
   if (category === "road") return yellowIcon;
+
+  // default → red
   return redIcon;
 }
 
@@ -230,20 +242,23 @@ function FetchToilets({ setToilets, trigger }) {
 
         {reports.map((r) =>
           r.lat && r.lng ? (
-            <Marker key={r.id} position={[r.lat, r.lng]} icon={getIcon(r.category)}>
+            <Marker
+  key={r.id}
+  position={[r.lat, r.lng]}
+  icon={getIcon(r.category, r.status)}
+>
               <Popup>
-                <b>{r.type}</b>
-                <br />
-                {r.description}
-                <br />
-                {r.imageUrl && (
-                  <img
-                    src={r.imageUrl}
-                    alt=""
-                    style={{ width: "150px", marginTop: "6px" }}
-                  />
-                )}
-              </Popup>
+  <b>{r.type}</b>
+  <br/>
+  {r.description}
+  <br/>
+  <b>Status:</b> {r.status}
+  <br/>
+  <img
+    src={r.beforeImage || r.imageUrl}
+    style={{ width:"160px", marginTop:"6px", borderRadius:"8px" }}
+  />
+</Popup>
             </Marker>
           ) : null
         )}

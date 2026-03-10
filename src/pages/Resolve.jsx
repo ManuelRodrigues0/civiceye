@@ -70,6 +70,42 @@ export default function Resolve() {
     return data.secure_url;
   };
 
+  // 📩 Send image for human review
+const sendForHumanReview = async () => {
+
+  if (!file) {
+    setToast({ message: "Upload image first", type: "error" });
+    return;
+  }
+
+  try {
+
+    const afterImageUrl = await uploadToCloudinary(file);
+
+    await updateDoc(doc(db, "reports", id), {
+      reviewImage: afterImageUrl,
+      status: "pending_human_review",
+      reviewRequestedAt: Date.now()
+    });
+
+    setToast({
+      message: "📩 Sent for human review",
+      type: "success"
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    setToast({
+      message: "Failed to submit review",
+      type: "error"
+    });
+
+  }
+
+};
+
   async function generateSceneEmbeddings(file) {
 
   const img = document.createElement("img");
@@ -246,8 +282,16 @@ for (const beforeEmb of embeddings) {
 console.log("Best similarity:", bestSimilarity);
 
 if (bestSimilarity < 0.85) {
-  setToast({message:"❌ Different location detected — fake cleanup" ,type:"error"});
+
+  setToast({
+    message: "❌ Different location detected — fake cleanup",
+    type: "error"
+  });
+
+  setResult("needs_review");   // triggers human review UI
+
   setLoading(false);
+
   return;
 }
 
@@ -323,12 +367,35 @@ else {
       <button className="verify-btn" onClick={handleUpload} disabled={loading}>
         {loading ? "Checking..." : "Verify Cleanup"}
       </button>
+      
       {toast && (
   <div className={`toast-card ${toast.type}`}>
     {toast.message}
   </div>
 )}
       </div>
+      {/* Human Review Section */}
+{result === "needs_review" && (
+
+  <div className="human-review-box">
+
+    <h3>Manual Verification</h3>
+
+    <p>
+      AI detected a different location.
+      If this cleanup is real, submit the photo for human review.
+    </p>
+
+    <button
+      className="review-btn"
+      onClick={sendForHumanReview}
+    >
+      Submit for Human Review
+    </button>
+
+  </div>
+
+)}
 
       {result && <div className="result">AI Result: {result}</div>}
     </div>
