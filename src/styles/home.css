@@ -128,10 +128,28 @@ body{
 
 /* CARD NUMBER */
 
+
 .dash-card p{
   font-size:34px;
-  font-weight:700;
-  letter-spacing:1px;
+  font-weight:750;
+  position:relative;
+}
+
+/* underline */
+.dash-card p::after{
+  content:"";
+  display:block;
+  width:30px;
+  height:3px;
+  background:#2563eb;
+  margin:6px auto 0;
+  border-radius:3px;
+  transition:width 0.3s ease;
+}
+
+/* stretch on hover */
+.dash-card:hover p::after{
+  width:60px;
 }
 
 /* SUBTLE BACKGROUND ICON EFFECT */
@@ -141,7 +159,6 @@ body{
   position:absolute;
   width:120px;
   height:120px;
-  background:radial-gradient(circle,rgba(0,0,0,0.04),transparent);
   top:-30px;
   right:-30px;
   border-radius:50%;
