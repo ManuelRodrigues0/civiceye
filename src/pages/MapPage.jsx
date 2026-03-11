@@ -128,7 +128,7 @@ function FetchToilets({ setToilets, trigger }) {
       `;
 
       const res = await fetch(
-        "https://overpass-api.de/api/interpreter",
+        "https://overpass.kumi.systems/api/interpreter",
         {
           method: "POST",
           body: query,
@@ -149,7 +149,11 @@ function FetchToilets({ setToilets, trigger }) {
           lat,
           lng,
           access: tags.access || "Unknown",
-          fee: tags.fee === "yes" ? "Paid" : "Free",
+          fee: tags.fee === "yes"
+  ? "Paid"
+  : tags.fee === "no"
+  ? "Free"
+  : "Unknown",
           operator: tags.operator || "Unknown",
           ownership: tags.ownership || "Unknown"
         };
