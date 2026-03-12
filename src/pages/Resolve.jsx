@@ -106,7 +106,7 @@ const sendForHumanReview = async () => {
 
 };
 
-  async function generateSceneEmbeddings(file) {
+  async function generateGarbageEmbeddings(file) {
 
   const img = document.createElement("img");
   img.src = URL.createObjectURL(file);
@@ -218,6 +218,82 @@ embeddings.push(
 return embeddings;
 
   }
+  async function generateConstructionEmbeddings(file) {
+
+  const img = document.createElement("img");
+  img.src = URL.createObjectURL(file);
+  await img.decode();
+
+  const createCrop = async (x,y,w,h) => {
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = w;
+    canvas.height = h;
+
+    ctx.drawImage(img,x,y,w,h,0,0,w,h);
+
+    return new Promise(res => canvas.toBlob(res,"image/jpeg"));
+
+  }
+
+  const embeddings = [];
+
+  // FULL IMAGE
+  embeddings.push(await getClipEmbedding(file));
+
+  // ROAD CENTER
+  const center = await createCrop(
+    img.width * 0.25,
+    img.height * 0.25,
+    img.width * 0.5,
+    img.height * 0.5
+  );
+
+  embeddings.push(
+    await getClipEmbedding(new File([center],"center.jpg"))
+  );
+
+  // LOWER ROAD AREA
+  const bottom = await createCrop(
+    0,
+    img.height * 0.5,
+    img.width,
+    img.height * 0.5
+  );
+
+  embeddings.push(
+    await getClipEmbedding(new File([bottom],"bottom.jpg"))
+  );
+
+  // LEFT ROAD
+  const left = await createCrop(
+    0,
+    img.height * 0.3,
+    img.width * 0.4,
+    img.height * 0.5
+  );
+
+  embeddings.push(
+    await getClipEmbedding(new File([left],"left.jpg"))
+  );
+
+  // RIGHT ROAD
+  const right = await createCrop(
+    img.width * 0.6,
+    img.height * 0.3,
+    img.width * 0.4,
+    img.height * 0.5
+  );
+
+  embeddings.push(
+    await getClipEmbedding(new File([right],"right.jpg"))
+  );
+
+  return embeddings;
+
+}
  
   // MAIN VERIFY FUNCTION
   const handleUpload = async () => {
@@ -256,7 +332,13 @@ return embeddings;
         console.log("AI RESULT:", ai);
 
         // 🧠 create embedding of AFTER photo
-const afterEmbeddings = await generateSceneEmbeddings(file);
+let afterEmbeddings;
+
+if (report.embeddingType === "road") {
+  afterEmbeddings = await generateConstructionEmbeddings(file);
+} else {
+  afterEmbeddings = await generateGarbageEmbeddings(file);
+}
 
 const embeddings = report.sceneEmbeddings 
   ? report.sceneEmbeddings.map(e => JSON.parse(e))

@@ -76,7 +76,7 @@ const getLocation = () =>
 
   import exifr from "exifr";
 
-  async function generateSceneEmbeddings(file) {
+  async function generateGarbageEmbeddings(file) {
 
   const img = document.createElement("img");
   img.src = URL.createObjectURL(file);
@@ -189,6 +189,83 @@ return embeddings;
 
   }
 
+  async function generateConstructionEmbeddings(file) {
+
+  const img = document.createElement("img");
+  img.src = URL.createObjectURL(file);
+  await img.decode();
+
+  const createCrop = async (x,y,w,h) => {
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = w;
+    canvas.height = h;
+
+    ctx.drawImage(img,x,y,w,h,0,0,w,h);
+
+    return new Promise(res => canvas.toBlob(res,"image/jpeg"));
+
+  }
+
+  const embeddings = [];
+
+  // FULL IMAGE
+  embeddings.push(await getClipEmbedding(file));
+
+  // ROAD CENTER
+  const center = await createCrop(
+    img.width * 0.25,
+    img.height * 0.25,
+    img.width * 0.5,
+    img.height * 0.5
+  );
+
+  embeddings.push(
+    await getClipEmbedding(new File([center],"center.jpg"))
+  );
+
+  // LOWER ROAD AREA
+  const bottom = await createCrop(
+    0,
+    img.height * 0.5,
+    img.width,
+    img.height * 0.5
+  );
+
+  embeddings.push(
+    await getClipEmbedding(new File([bottom],"bottom.jpg"))
+  );
+
+  // LEFT ROAD
+  const left = await createCrop(
+    0,
+    img.height * 0.3,
+    img.width * 0.4,
+    img.height * 0.5
+  );
+
+  embeddings.push(
+    await getClipEmbedding(new File([left],"left.jpg"))
+  );
+
+  // RIGHT ROAD
+  const right = await createCrop(
+    img.width * 0.6,
+    img.height * 0.3,
+    img.width * 0.4,
+    img.height * 0.5
+  );
+
+  embeddings.push(
+    await getClipEmbedding(new File([right],"right.jpg"))
+  );
+
+  return embeddings;
+
+}
+
 async function verifyImage(file, reportLat, reportLng) {
   try {
     const meta = await exifr.parse(file);
@@ -283,7 +360,7 @@ function Report() {
       const lng = pos.coords.longitude;
 
       // 3️⃣ Detect category
-      const category = detectCategory(type, description);
+      const category = type;
 
 
       // create temporary image element for AI
@@ -296,16 +373,14 @@ await localImg.decode();
 let aiResult = null;
 let constructionResult = null;
 
-// 🧠 Run model depending on category
-
 if (category === "waste") {
 
   aiResult = await analyzeImage(localImg);
-  console.log("Waste AI Result:", aiResult);
+  console.log("Waste model result:", aiResult);
 
-  if (aiResult.label === "clean") {
+  if (aiResult.dirty < 0.6) {
 
-    setToast("❌ The image does not show garbage or waste as described.");
+    setToast("❌ This image does not clearly show garbage.");
 
     setLoading(false);
     return;
@@ -317,42 +392,14 @@ if (category === "waste") {
 else if (category === "road") {
 
   constructionResult = await analyzeConstruction(localImg);
-  console.log("Construction Result:", constructionResult);
+  console.log("Road model result:", constructionResult);
 
   if (
     constructionResult.label === "normal_road" ||
     constructionResult.label === "indoor_room"
   ) {
 
-    setToast("❌ The image does not show the road issue described.");
-
-    setLoading(false);
-    return;
-
-  }
-
-}
-
-else {
-
-  // If unclear category → run both models
-
-  aiResult = await analyzeImage(localImg);
-  constructionResult = await analyzeConstruction(localImg);
-
-  console.log("Waste AI Result:", aiResult);
-  console.log("Construction Result:", constructionResult);
-
-  if (
-    aiResult.label === "clean" &&
-    (
-      constructionResult.label === "normal_road" ||
-      constructionResult.label === "indoor_room"
-    )
-  ) {
-
-    setToast("❌ The image does not match the reported issue.");
-
+    setToast("❌ This image does not show a road issue.");
     setLoading(false);
     return;
 
@@ -360,7 +407,15 @@ else {
 
 }
 // 🧠 generate place fingerprint
-const sceneEmbeddings = await generateSceneEmbeddings(image);
+let sceneEmbeddings = [];
+
+if (category === "waste") {
+  sceneEmbeddings = await generateGarbageEmbeddings(image);
+}
+
+else if (category === "road") {
+  sceneEmbeddings = await generateConstructionEmbeddings(image);
+}
 // convert each embedding to string (Firestore safe)
 const safeEmbeddings = sceneEmbeddings.map(e => JSON.stringify(e));
 console.log("Scene embedding length:", sceneEmbeddings.length);
@@ -369,6 +424,8 @@ console.log("Scene embedding length:", sceneEmbeddings.length);
   type,
   description,
   category,
+
+  embeddingType: category,
 
   // BEFORE PHOTO
   beforeImage: imageUrl,
@@ -413,12 +470,23 @@ beforeDirty: aiResult?.dirty || 0,
     <div className="content">
       <h2 style={{ marginBottom: 16 }}>Report a Problem</h2>
 
-      <input
-        className="input"
-        placeholder="Type (Garbage / Pothole / Light)"
-        value={type}
-        onChange={(e) => setType(e.target.value)}
-      />
+      <div className="issue-select">
+
+  <button
+    className={`issue-btn ${type === "waste" ? "active" : ""}`}
+    onClick={() => setType("waste")}
+  >
+    🗑 Garbage / Waste
+  </button>
+
+  <button
+    className={`issue-btn ${type === "road" ? "active" : ""}`}
+    onClick={() => setType("road")}
+  >
+    🛣 Road / Pothole
+  </button>
+
+</div>
 
       <textarea
         className="textarea"

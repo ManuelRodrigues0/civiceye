@@ -180,3 +180,29 @@ margin: 8px;
     opacity:1;
   }
 }
+.issue-select {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.issue-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px solid #e5e7eb;
+  background: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.issue-btn:hover {
+  border-color: #2563eb;
+}
+
+.issue-btn.active {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
