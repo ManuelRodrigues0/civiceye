@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { analyzeImage } from "../ai/cleanDetector";
+import { analyzeConstruction } from "../ai/constructionDetector";
 import { getClipEmbedding } from "../ai/clipService";
 import "../styles/report.css";
 
@@ -10,26 +11,58 @@ function detectCategory(type, description) {
 
   // Waste / garbage
   if (
-    text.includes("garbage") ||
-    text.includes("trash") ||
-    text.includes("waste") ||
-    text.includes("sewage") ||
-    text.includes("dirty") ||
-    text.includes("plastic") ||
-    text.includes("smell")
-  ) {
+  text.includes("garbage") ||
+  text.includes("trash") ||
+  text.includes("waste") ||
+  text.includes("dirty") ||
+  text.includes("plastic") ||
+  text.includes("smell") ||
+  text.includes("litter") ||
+  text.includes("dump") ||
+  text.includes("dumping") ||
+  text.includes("garbage pile") ||
+  text.includes("garbage heap") ||
+  text.includes("waste pile") ||
+  text.includes("pollution") ||
+  text.includes("sewage") ||
+  text.includes("drain waste") ||
+  text.includes("dirty area") ||
+  text.includes("filthy") ||
+  text.includes("rubbish") ||
+  text.includes("unclean") ||
+  text.includes("waste dump") ||
+  text.includes("garbage dump") ||
+  text.includes("trash pile") ||
+  text.includes("waste accumulation")
+) {
     return "waste";
   }
 
   // Road / construction
   if (
-    text.includes("pothole") ||
-    text.includes("road") ||
-    text.includes("construction") ||
-    text.includes("digging") ||
-    text.includes("footpath") ||
-    text.includes("broken road")
-  ) {
+  text.includes("pothole") ||
+  text.includes("road") ||
+  text.includes("broken road") ||
+  text.includes("damaged road") ||
+  text.includes("bad road") ||
+  text.includes("cracked road") ||
+  text.includes("road damage") ||
+  text.includes("road crack") ||
+  text.includes("road hole") ||
+  text.includes("road pit") ||
+  text.includes("road break") ||
+  text.includes("construction") ||
+  text.includes("digging") ||
+  text.includes("dug road") ||
+  text.includes("dug up road") ||
+  text.includes("roadwork") ||
+  text.includes("footpath") ||
+  text.includes("broken footpath") ||
+  text.includes("sidewalk") ||
+  text.includes("damaged sidewalk") ||
+  text.includes("construction debris") ||
+  text.includes("construction waste")
+) {
     return "road";
   }
 
@@ -260,8 +293,72 @@ localImg.src = URL.createObjectURL(image);
 await localImg.decode();
 
 // run AI BEFORE upload
-const aiResult = await analyzeImage(localImg);
-console.log("AI RESULT:", aiResult);
+let aiResult = null;
+let constructionResult = null;
+
+// 🧠 Run model depending on category
+
+if (category === "waste") {
+
+  aiResult = await analyzeImage(localImg);
+  console.log("Waste AI Result:", aiResult);
+
+  if (aiResult.label === "clean") {
+
+    setToast("❌ The image does not show garbage or waste as described.");
+
+    setLoading(false);
+    return;
+
+  }
+
+}
+
+else if (category === "road") {
+
+  constructionResult = await analyzeConstruction(localImg);
+  console.log("Construction Result:", constructionResult);
+
+  if (
+    constructionResult.label === "normal_road" ||
+    constructionResult.label === "indoor_room"
+  ) {
+
+    setToast("❌ The image does not show the road issue described.");
+
+    setLoading(false);
+    return;
+
+  }
+
+}
+
+else {
+
+  // If unclear category → run both models
+
+  aiResult = await analyzeImage(localImg);
+  constructionResult = await analyzeConstruction(localImg);
+
+  console.log("Waste AI Result:", aiResult);
+  console.log("Construction Result:", constructionResult);
+
+  if (
+    aiResult.label === "clean" &&
+    (
+      constructionResult.label === "normal_road" ||
+      constructionResult.label === "indoor_room"
+    )
+  ) {
+
+    setToast("❌ The image does not match the reported issue.");
+
+    setLoading(false);
+    return;
+
+  }
+
+}
 // 🧠 generate place fingerprint
 const sceneEmbeddings = await generateSceneEmbeddings(image);
 // convert each embedding to string (Firestore safe)
@@ -275,19 +372,24 @@ console.log("Scene embedding length:", sceneEmbeddings.length);
 
   // BEFORE PHOTO
   beforeImage: imageUrl,
-  beforeLabel: aiResult.label,
-  beforeConfidence: aiResult.confidence,
+  beforeLabel: aiResult?.label || constructionResult?.label,
+beforeConfidence: aiResult?.confidence || constructionResult?.confidence,
 
-  beforeClean: aiResult.clean,
-beforeModerate: aiResult.moderate,
-beforeDirty: aiResult.dirty,
+  beforeClean: aiResult?.clean || 0,
+beforeModerate: aiResult?.moderate || 0,
+beforeDirty: aiResult?.dirty || 0,
 
   // AFTER PHOTO (empty initially)
   afterImage: null,
   afterLabel: null,
   afterConfidence: null,
   
-  status: aiResult.label === "dirty" ? "open" : "invalid",
+  status:
+  aiResult?.label === "dirty" ||
+  constructionResult?.label === "pothole" ||
+  constructionResult?.label === "construction_debris"
+    ? "open"
+    : "invalid",
   sceneEmbeddings: safeEmbeddings,
   lat,
   lng,
