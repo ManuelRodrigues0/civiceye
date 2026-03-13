@@ -6,6 +6,28 @@ import { analyzeConstruction } from "../ai/constructionDetector";
 import { getClipEmbedding } from "../ai/clipService";
 import "../styles/report.css";
 
+async function getAreaName(lat, lng) {
+
+  const res = await fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+  );
+
+  const data = await res.json();
+
+  const address = data.address || {};
+
+  const area =
+    address.suburb ||
+    address.neighbourhood ||
+    address.city_district ||
+    address.city ||
+    "Unknown area";
+
+  const city = address.city || address.town || "Mumbai";
+
+  return `${area}, ${city}`;
+}
+
 function detectCategory(type, description) {
   const text = (type + " " + description).toLowerCase();
 
@@ -419,6 +441,8 @@ else if (category === "road") {
 // convert each embedding to string (Firestore safe)
 const safeEmbeddings = sceneEmbeddings.map(e => JSON.stringify(e));
 console.log("Scene embedding length:", sceneEmbeddings.length);
+
+const areaName = await getAreaName(lat, lng);
       // 4️⃣ Save to Firestore
       await addDoc(collection(db, "reports"), {
   type,
@@ -450,6 +474,7 @@ beforeDirty: aiResult?.dirty || 0,
   sceneEmbeddings: safeEmbeddings,
   lat,
   lng,
+  area: areaName,
   createdAt: Date.now(),
 });
 

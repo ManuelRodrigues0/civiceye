@@ -152,7 +152,11 @@ useEffect(() => {
   loading="lazy"
 />
 
-            <div className="type">{r.type}</div>
+            <div className="type">
+  {r.category === "waste"
+    ? `Waste issue at ${r.area}`
+    : `Road issue at ${r.area}`}
+</div>
             <div className="desc">{r.description}</div>
 
             {time && <small>🕒 {time}</small>}

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { db } from "../firebase";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { analyzeImage } from "../ai/cleanDetector";
+import { analyzeConstruction } from "../ai/constructionDetector";
 import { getClipEmbedding, cosineSimilarity } from "../ai/clipService";
 import "../styles/resolve.css";
 // 🔒 Get current GPS location
@@ -36,6 +37,7 @@ export default function Resolve() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [toast, setToast] = useState(null);
+  const [confirmPopup, setConfirmPopup] = useState(false);
 
   useEffect(() => {
   if (toast) {
@@ -328,8 +330,22 @@ return embeddings;
 
       img.onload = async () => {
 
-        const ai = await analyzeImage(img);
-        console.log("AI RESULT:", ai);
+        let aiResult = null;
+let roadResult = null;
+
+if (report.embeddingType === "waste") {
+
+  aiResult = await analyzeImage(img);
+  console.log("Waste AI:", aiResult);
+
+}
+
+else if (report.embeddingType === "road") {
+
+  roadResult = await analyzeConstruction(img);
+  console.log("Road AI:", roadResult);
+
+}
 
         // 🧠 create embedding of AFTER photo
 let afterEmbeddings;
@@ -379,26 +395,42 @@ if (bestSimilarity < 0.85) {
 
         // 🧠 Compare before vs after probabilities
 
-const cleanIncrease = ai.clean - (report.beforeClean || 0);
-const dirtyDecrease = (report.beforeDirty || 0) - ai.dirty;
-
 let finalStatus = "open";
 
-// Fully cleaned
-if (ai.clean >= 0.9) {
-  finalStatus = "resolved";
+if (report.embeddingType === "waste") {
+
+  if (aiResult.clean >= 0.9) {
+    finalStatus = "resolved";
+  }
+
+  else if (aiResult.moderate > aiResult.dirty) {
+    finalStatus = "improved";
+  }
+
+  else {
+    setToast({message:"❌ Area still dirty",type:"error"});
+    setLoading(false);
+    return;
+  }
+
 }
 
-// Moderate improvement
-else if (ai.moderate > ai.dirty) {
-  finalStatus = "improved";
-}
+else if (report.embeddingType === "road") {
 
-// Still dirty
-else {
-  setToast({message:"❌ Area still dirty",type:"error"});
-  setLoading(false);
-  return;
+  if (roadResult.label === "normal_road") {
+
+    finalStatus = "resolved";
+
+  }
+
+  else {
+
+    setConfirmPopup(true);
+    setLoading(false);
+    return;
+
+  }
+
 }
 
         // ☁️ Upload AFTER AI passes (CLOUDINARY NOW)
@@ -408,8 +440,8 @@ else {
         await updateDoc(doc(db, "reports", id), {
           afterImage: afterImageUrl,
             beforeImage: afterImageUrl,
-          afterLabel: ai.label,
-          afterConfidence: ai.confidence,
+          afterLabel: aiResult?.label || roadResult?.label,
+afterConfidence: aiResult?.confidence || roadResult?.confidence,
           status: finalStatus,
         progressUpdatedAt: Date.now(),
         });
@@ -480,6 +512,44 @@ else {
 )}
 
       {result && <div className="result">AI Result: {result}</div>}
+
+      {confirmPopup && (
+  <div className="confirm-overlay">
+
+    <div className="confirm-box">
+
+      <h3>Manual Verification</h3>
+
+      <p>
+        ⚠ AI still detects a road issue.  
+        Do you want to send this for manual verification?
+      </p>
+
+      <div className="confirm-buttons">
+
+        <button
+          className="confirm-yes"
+          onClick={() => {
+            setResult("needs_review");
+            setConfirmPopup(false);
+          }}
+        >
+          Yes
+        </button>
+
+        <button
+          className="confirm-no"
+          onClick={() => setConfirmPopup(false)}
+        >
+          No
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
     </div>
   );
 }
