@@ -13,6 +13,7 @@ export default function Home() {
   const [userLocation, setUserLocation] = useState(null);
 const [nearbyReports, setNearbyReports] = useState(0);
 const [resolvedCount, setResolvedCount] = useState(0);
+const [localAQI, setLocalAQI] = useState(null);
 
   useEffect(() => {
     // latest reports first
@@ -62,12 +63,23 @@ const [resolvedCount, setResolvedCount] = useState(0);
 }, [reports]);
 
 useEffect(() => {
-  navigator.geolocation.getCurrentPosition((pos) => {
+
+  navigator.geolocation.getCurrentPosition(async (pos) => {
+
+    const lat = pos.coords.latitude;
+    const lng = pos.coords.longitude;
+
     setUserLocation({
-      lat: pos.coords.latitude,
-      lng: pos.coords.longitude
+      lat,
+      lng
     });
+
+    const aqi = await getAQI(lat, lng);
+
+    setLocalAQI(aqi?.aqi);
+
   });
+
 }, []);
 
 useEffect(() => {
@@ -112,9 +124,7 @@ useEffect(() => {
       <div className="dash-card">
         <h3>Local AQI</h3>
         <p>
-          {reports.length > 0
-            ? aqiData[reports[0].id]?.aqi || "Loading..."
-            : "--"}
+          {localAQI || "Loading..."}
         </p>
       </div>
 
